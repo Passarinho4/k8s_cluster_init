@@ -1,15 +1,15 @@
 masterIp = "192.168.77.10"
 
 workers = {
- "worker1" => "192.168.77.11"
-# "worker2" => "192.168.77.12",
-# "worker3" => "192.168.77.13",
-# "worker4" => "192.168.77.14",
-# "worker5" => "192.168.77.15",
-# "worker6" => "192.168.77.16",
-# "worker7" => "192.168.77.17",
-# "worker8" => "192.168.77.18",
-# "worker9" => "192.168.77.19"
+ "worker1" => "192.168.77.11",
+ "worker2" => "192.168.77.12",
+ "worker3" => "192.168.77.13",
+ "worker4" => "192.168.77.14",
+ "worker5" => "192.168.77.15",
+ "worker6" => "192.168.77.16",
+ "worker7" => "192.168.77.17",
+ "worker8" => "192.168.77.18",
+ "worker9" => "192.168.77.19"
 }
 
 Vagrant.configure("2") do |config|
@@ -21,6 +21,7 @@ Vagrant.configure("2") do |config|
  
 #create master node
  config.vm.define "master" do |machine|
+  machine.vm.hostname = "master"
   machine.vm.network :private_network, ip: masterIp
   machine.vm.provider :virtualbox do |v|
    v.customize ['modifyvm', :id, '--cableconnected1', 'on']
@@ -32,7 +33,9 @@ Vagrant.configure("2") do |config|
 
 #create workers
  workers.each do |name, ip|
+    config.vm.host_name = name
     config.vm.define name do |machine|
+     machine.vm.hostname = name
      machine.vm.network :private_network, ip: ip
      machine.vm.provider :virtualbox do |v|
       v.customize ['modifyvm', :id, '--cableconnected1', 'on']

@@ -41,7 +41,7 @@
 
   tasks:
    - name: Initialize Kubernetes master node and generate join token to /token.sh file
-     shell: kubeadm init --apiserver-advertise-address {{ansible_enp0s8.ipv4.address}} --pod-network-cidr 10.244.0.0/16 | grep "kubeadm join" > token.sh
+     shell: kubeadm init --apiserver-advertise-address {{ansible_enp0s8.ipv4.address}} --pod-network-cidr 10.244.0.0/16 | grep "kubeadm join" > /token.sh
 
    - name: Fix interface (vagrant issue) 
      lineinfile: path=/etc/systemd/system/kubelet.service.d/10-kubeadm.conf line=Environment="KUBELET_EXTRA_ARGS=--node-ip={{ansible_enp0s8.ipv4.address}}" insertafter=Environment=.*
@@ -59,4 +59,22 @@
      environment: 
       KUBECONFIG: "/etc/kubernetes/admin.conf"
 
+   - name: Fetch token.sh
+     fetch: src=/token.sh dest=/ flat=yes
 
+- hosts: workers
+  become: true
+  strategy: free
+
+  tasks: 
+   - name: Copy join script from master
+     copy: src=/token.sh dest=/token.sh mode=0777
+
+   - name: Join worker to Kubernetes cluster
+     shell: /token.sh
+
+   - name: Fix interface (vagrant issue)
+     lineinfile: path=/etc/systemd/system/kubelet.service.d/10-kubeadm.conf line=Environment="KUBELET_EXTRA_ARGS=--node-ip={{ansible_enp0s8.ipv4.address}}" insertafter=Environment=.*
+
+   - name: Restart kubernetes
+     shell: systemctl daemon-reload & systemctl restart kubelet
