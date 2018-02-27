@@ -1,0 +1,62 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars.yml
+  strategy: free
+
+  tasks:
+    - name: Install transport https 
+      apt: name={{item}} state=present
+      with_items: 
+         - apt-transport-https
+         - ca-certificates
+         - curl
+         - gnupg2
+         - software-properties-common
+
+    - name: Add the Docker signing key
+      apt_key: url=https://download.docker.com/linux/debian/gpg state=present
+
+    - name: Add the Docker APT repo
+      apt_repository: repo='deb https://download.docker.com/linux/debian stretch stable' state=present
+
+    - name: Add the Google signing key
+      apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg state=present
+
+    - name: Add the k8s APT repo
+      apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present
+
+    - name: Install packages
+      apt: name={{ item }} state=installed update_cache=true force=yes
+      with_items: "{{ PACKAGES }}"
+
+    #Switch off swap - https://github.com/kubernetes/kubernetes/issues/53533
+    - name: Swich off swap
+      shell: swapoff -a
+
+- hosts: master
+  become: true
+  strategy: free
+
+  tasks:
+   - name: Initialize Kubernetes master node and generate join token to /token.sh file
+     shell: kubeadm init --apiserver-advertise-address {{ansible_enp0s8.ipv4.address}} --pod-network-cidr 10.244.0.0/16 | grep "kubeadm join" > token.sh
+
+   - name: Fix interface (vagrant issue) 
+     lineinfile: path=/etc/systemd/system/kubelet.service.d/10-kubeadm.conf line=Environment="KUBELET_EXTRA_ARGS=--node-ip={{ansible_enp0s8.ipv4.address}}" insertafter=Environment=.*
+
+   - name: Restart kubernetes
+     shell: systemctl daemon-reload & systemctl restart kubelet & chmod 644 /etc/kubernetes/admin.conf
+   
+   - name: Set environment variable
+     lineinfile: 
+      path: /etc/profile 
+      line: export KUBECONFIG=/etc/kubernetes/admin.conf
+
+   - name: Run networking 
+     shell: kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
+     environment: 
+      KUBECONFIG: "/etc/kubernetes/admin.conf"
+
+
