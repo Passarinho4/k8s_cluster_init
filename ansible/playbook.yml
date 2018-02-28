@@ -41,7 +41,7 @@
 
   tasks:
    - name: Initialize Kubernetes master node and generate join token to /token.sh file
-     shell: kubeadm init --apiserver-advertise-address {{ansible_enp0s8.ipv4.address}} --pod-network-cidr 10.244.0.0/16 | grep "kubeadm join" > /token.sh
+     shell: kubeadm init --pod-network-cidr 10.244.0.0/16 --apiserver-advertise-address {{ansible_enp0s8.ipv4.address}} | grep "kubeadm join" > /token.sh
 
    - name: Fix interface (vagrant issue) 
      lineinfile: path=/etc/systemd/system/kubelet.service.d/10-kubeadm.conf line=Environment="KUBELET_EXTRA_ARGS=--node-ip={{ansible_enp0s8.ipv4.address}}" insertafter=Environment=.*
@@ -55,7 +55,7 @@
       line: export KUBECONFIG=/etc/kubernetes/admin.conf
 
    - name: Run networking 
-     shell: kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
+     shell: kubectl apply -f https://raw.githubusercontent.com/Passarinho4/k8s_cluster_init/master/kube-flannel.yml
      environment: 
       KUBECONFIG: "/etc/kubernetes/admin.conf"
 
