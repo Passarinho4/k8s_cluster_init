@@ -8,5 +8,6 @@ data:
     address-pools:
     - name: my-ip-space
       protocol: arp
+      arp-network: 10.244.0.0/16
       cidr:
-      - 10.244.0.0/16
+      - 10.244.244.0/24
