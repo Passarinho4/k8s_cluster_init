@@ -7,6 +7,7 @@ data:
   config: |
     address-pools:
     - name: my-ip-space
+      avoid-buggy-ips: true
       protocol: arp
       arp-network: 10.244.0.0/16
       cidr:
