@@ -25,8 +25,12 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         - name: http_proxy
-          value: status.hostIP:4140
+          value: $(HOST_IP):4140
         args:
         - "-addr=:7777"
         - "-text=Hello"
