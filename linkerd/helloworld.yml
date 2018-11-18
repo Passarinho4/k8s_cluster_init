@@ -15,7 +15,7 @@ spec:
       dnsPolicy: ClusterFirst
       containers:
       - name: service
-        image: passarinho/helloworld
+        image: passarinho/helloworld:szymek
         env:
         - name: NODE_NAME
           valueFrom:
@@ -67,7 +67,7 @@ spec:
       dnsPolicy: ClusterFirst
       containers:
       - name: service
-        image: passarinho/helloworld
+        image: passarinho/helloworld:szymek
         env:
         - name: POD_IP
           valueFrom:
