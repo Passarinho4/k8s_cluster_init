@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ketsiso
+spec:
+  selector:
+    matchLabels:
+      app: ketsiso
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ketsiso
+    spec:
+      containers:
+        - name: ketsiso
+          image: passarinho/ketsiso
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ketsiso
+spec:
+  selector:
+    app: ketsiso
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
