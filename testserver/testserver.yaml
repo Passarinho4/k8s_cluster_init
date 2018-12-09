@@ -1,11 +1,38 @@
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deloyment
 metadata:
   name: testserver
 spec:
-  containers:
-    - name: testserver
-      image: passarinho/testserver
-      ports:
-       - containerPort: 8090
+  selector:
+    matchLabels:
+      app: testserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: testserver
+    spec:
+      containers:
+        - name: testserver
+          image: passarinho/testserver
+          ports:
+            - containerPort: 8090
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testserver
+spec:
+  selector:
+    app: testserver
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090
+
+
+
+
