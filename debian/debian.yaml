@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ubuntu
+  name: debian
 spec:
   containers:
-  - name: ubuntu
-    image: ubuntu:latest
+  - name: debian
+    image: amouat/network-utils
     # Just spin & wait forever
     command: [ "/bin/bash", "-c", "--" ]
     args: [ "while true; do sleep 30; done;" ]
