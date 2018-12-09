@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: Deloyment
+kind: Deployment
 metadata:
   name: testserver
 spec:
