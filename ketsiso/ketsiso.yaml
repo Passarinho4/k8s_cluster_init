@@ -16,6 +16,7 @@ spec:
       containers:
         - name: ketsiso
           image: passarinho/ketsiso
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 

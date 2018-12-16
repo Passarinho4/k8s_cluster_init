@@ -16,6 +16,7 @@ spec:
       containers:
         - name: testserver
           image: passarinho/testserver
+          imagePullPolicy: Always
           ports:
             - containerPort: 8090
 
