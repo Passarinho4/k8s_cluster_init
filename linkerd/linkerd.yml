@@ -95,6 +95,9 @@ data:
       service:
         responseClassifier:
           kind: io.l5d.http.retryableRead5XX
+        kind: io.l5d.static
+        configs:
+        - bandwidthLimitKbPerSec: 200
 
     - protocol: http
       label: incoming
@@ -110,6 +113,10 @@ data:
       servers:
       - port: 4141
         ip: 0.0.0.0
+      service:
+        kind: io.l5d.static
+        configs:
+        - bandwidthLimitKbPerSec: 200
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
