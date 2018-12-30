@@ -137,6 +137,7 @@ spec:
       containers:
       - name: l5d
         image: passarinho/linkerd
+        imagePullPolicy: Always
         env:
         - name: POD_IP
           valueFrom:
