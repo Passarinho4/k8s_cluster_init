@@ -19,6 +19,11 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8090
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
 
 
 ---
