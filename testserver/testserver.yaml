@@ -20,7 +20,7 @@ spec:
           ports:
             - containerPort: 8090
           env:
-            - name: HOST_IP
+            - name: NODE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
