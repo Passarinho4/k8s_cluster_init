@@ -93,8 +93,6 @@ data:
       - port: 4140
         ip: 0.0.0.0
       service:
-        responseClassifier:
-          kind: io.l5d.http.retryableRead5XX
         kind: io.l5d.static
         configs:
         - bandwidthLimitKbPerSec: 200
