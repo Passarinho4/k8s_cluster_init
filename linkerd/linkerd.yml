@@ -95,7 +95,8 @@ data:
       service:
         kind: io.l5d.static
         configs:
-        - bandwidthLimitKbPerSec: 200
+        - prefix: /svc #default for all services
+          bandwidthLimitKbPerSec: 200
 
     - protocol: http
       label: incoming
@@ -114,7 +115,8 @@ data:
       service:
         kind: io.l5d.static
         configs:
-        - bandwidthLimitKbPerSec: 200
+        - prefix: /svc #default for all services
+          bandwidthLimitKbPerSec: 200
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
