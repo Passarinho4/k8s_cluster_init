@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ketsiso5
+spec:
+  selector:
+    matchLabels:
+      app: ketsiso5
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ketsiso5
+    spec:
+      containers:
+        - name: ketsiso5
+          image: passarinho/ketsiso
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ketsiso5
+spec:
+  selector:
+    app: ketsiso5
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
